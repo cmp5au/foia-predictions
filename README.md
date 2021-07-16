@@ -18,7 +18,7 @@ _________________________
 5. [Sources and Further Reading](#sources-and-further-reading)
 
 <div align="center">
-    <img width="1200" src="./images/foia-crest.jpg" alt="chmod Options">
+    <img width="1200" src="./images/foia-crest.png" alt="chmod Options">
 </div>
 
 ## Background
