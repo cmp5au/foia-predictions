@@ -22,68 +22,17 @@ _________________________
 </div>
 
 ## Background
-Chess is a two-person strategy game where each player attempts to coordinate their pieces -- pawns, knights, bishops, rooks, queen, and king -- to attack the opposing king and prevent its escape, resulting in checkmate and the end of the game. A win for White is recorded as 1-0, denoting 1 point for White and 0 points for Black. Similarly, a win for Black is 0-1, and a draw is 0.5-0.5. I will use the term <strong>point value</strong> to refer to the overall result of the game. Each of the pieces has a relative <strong>material value</strong>, commonly given as:
-
-<br>
-
-| Piece  | Value |
-|  :-:   | :-: |
-| Pawn   | 1 |
-| Knight (N) | 3 |
-| Bishop (B) | 3 |
-| Rook (R)   | 5 |
-| Queen (Q)  | 9 |
-
-<br>
-
-Based on this table, there are material exchanges that are nominally equal but create an imbalance in the game: bishop for knight, 2 bishops for 2 knights, bishop and knight for rook and pawn, and queen for two rooks, for example. Chess masters, teachers, and coaches generally prefer one side of these exchanges over the other despite the seemingly equal trade. For example, masters <strong>strongly</strong> prefer to have a pair of bishops over a pair of knights, a knight and bishop over a rook and pawn, and 2 rooks over a queen. That being said, the size of the advantage always depends on the state of the chessboard.
-
-My goal is to answer the following questions:
-1. Does the material imbalance confer an advantage, even to amateur players?
-2. Can we isolate the characteristics that make one side of the imbalance favorable?
+The Freedom of Information Act (FOIA) was signed into law in 1967, and it requires government agencies to fully or partially disclose previously unreleased information upon request. There are 9 current exemptions that address issues of security and personal rights. It was initially targeted to improve government transparency with businesses and media, but recently law firms and individuals have been the most frequent users. FOIA has been amended, reformed, or expanded 8 times since its inception, and it can be difficult for a private citizen to know whether their request will be accepted or rejected. The goal is to use publicly available past FOIA requests to create a text classifier that can let a potential requester estimate their probability of success before submission.
 
 ## Data
 
-### Raw Dataset
+### Using the API
+MuckRock is a collaborative news site whose goal is to make politics more transparent and democracies more informed. They have a free [API](https://www.muckrock.com/api/) where you can access their FOIA request data programmatically. It is rate-limited at one page (50 requests) per second, and there are 19004 labelled federal FOIA requests, so it will take at least 6 minutes to download the requests. Code to do so is provided in the source folder (src/export_foia_to_mongo.py), but you must edit the credentials.py file to include your personal access token.
 
-The online free chess website [lichess.org](http://www.lichess.org/) features a database of every game ever played from January 2013 to May 2021. The data is in Portable Game Notation (PGN) format, as shown in the game below.
+### Preprocessing
+Each FOIA request contains many communications between requester and agency, but *a priori* our model only sees the initial request, so the code creates a new 'body' field and discards the rest of the communications.
 
-<br>
-
-```text
-[Event "Rated Blitz game"]
-[Site "https://lichess.org/yfq9u4fm"]
-[Date "????.??.??"]
-[Round "?"]
-[White "tiggran"]
-[Black "treehugger"]
-[Result "1-0"]
-[WhiteElo "1599"]
-[BlackElo "1487"]
-[ECO "B00"]
-[Opening "Owen Defense"]
-[TimeControl "300+0"]
-[UTCDate "2013.01.01"]
-[UTCTime "04:13:22"]
-[Termination "Normal"]
-[WhiteRatingDiff "+8"]
-[BlackRatingDiff "-8"]
-
-1. e4 b6 2. Nf3 Bb7 3. Nc3 e6 4. d3 Bb4 5. Bd2 Bxc3 6. Bxc3 Ne7 7. Be2 f6
-8. e5 Ng6 9. exf6 gxf6 10. Qd2 Bxf3 11. Bxf3 c6 12. O-O-O Qe7 13. Rhe1 e5
-14. Bd4 c5 15. Bc3 Nc6 16. Bxc6 dxc6 17. Qh6 Rg8 18. g3 Qg7 19. Qh3 Ke7 20.
-d4 Rad8 21. dxe5 Rxd1+ 22. Rxd1 fxe5 23. Rd7+ 1-0
-```
-
-<br>
-
-This features metadata of the game followed by a list of moves in modern algebraic chess notation that is difficult to read and requires parsing. In this example, it isn't immediately clear that this game features two amateur players that reach a bishop pair vs. knight pair position that White converted into a victory by resignation.
-
-The unabridged raw dataset of over 2.2 billion games is available at [database.lichess.org](https://database.lichess.org/). Each month's games are available to download as bzip2 files. Of these, about 15 million were played in 2013 or 2014.
-
-### Refining the Dataset
-
-In blitz chess, there is an added component of a clock that can cause a player to lose if they run out of time. This often results in a player making ill-considered and suboptimal moves. Blitz is also the preferred method of many players online, so for the sake of consistency and applicability I limited my dataset to blitz games (3 - 5 minutes per player) of amateur players (lichess.org rating between 1200 and 2000), played in 2013 or 2014. My dataset is the 5,261,428 games that fit this criteria. In order to process the large data volume, I used the open source command line tool [pgn-extract](https://www.cs.kent.ac.uk/people/staff/djb/pgn-extract/) to match on time control and player blitz rating.
+The body of the request is vectorized with scikit-learn's TfidfVectorizer, and the request agency is added as a feature to the transformed corpus.
 
 _________________________
 
