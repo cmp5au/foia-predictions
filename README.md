@@ -115,7 +115,7 @@ The worse the class imbalance, the worse accuracy is as a metric, so I looked fo
 </center>
 <br>
 
-Of these 4 models, LightGBM was by far the best-performing in cross-validation, so I used this model to run a cross-validated grid search and tune the hyperparameters. My final model had about 78% accuracy in predicting the FOIA request result, which is quite a bit higher than the baseline.
+Of these 4 models, LightGBM was by far the best-performing in cross-validation, so I used this model to run a cross-validated grid search and tune the hyperparameters. My final model had about 78% accuracy in predicting the FOIA request result; a significant improvement over baseline.
 _________________________
 
 ### Feature Importances
