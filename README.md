@@ -37,7 +37,7 @@ The requests are loaded into MongoDB using the `mongo` Docker image. The body of
 _________________________
 
 ## Exploratory Data Analysis
-
+Thanks to MuckRock's API and our choice of preprocessing, the dataset is clean and complete. Looking into request bodies at random, I saw similar phrasing with around 200-300 words in each request body (though some were longer). I also hunted for interesting FOIA requests, and found fan mail from J. Edgar Hoover, a death threat letter to Roberto Clemente that was opened 2 months <strong>after</strong> the attack was supposed to have happened, and rejected vanity plates:
 
 <br>
 
@@ -45,7 +45,7 @@ _________________________
 
 <br>
 <div align="center">
-    <img width="400" src="" alt="chmod Options">
+    <img width="400" src="images/licenses.jpg" alt="chmod Options">
 </div>
 <br>
 <br>
