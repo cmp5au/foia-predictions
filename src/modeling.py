@@ -16,7 +16,7 @@ foia_data = db['foia_jsons']
 
 foias = list(foia_data.find({'body' : {"$exists": True}}))
 
-df = pd.read_csv("agency ids.csv")
+df = pd.read_csv("../data/agency_ids.csv")
 df.set_index('id', inplace=True)
 df = df.append(pd.DataFrame(data=[['Agency not found']],
                        columns=df.columns,
