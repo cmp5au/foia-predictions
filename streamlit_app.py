@@ -5,10 +5,10 @@ import pandas as pd
 # from tensorflow.keras.models import load_model
 # from tensorflow.keras.preprocessing.sequence import pad_sequences
 
-header = st.container()
-dataset = st.container()
-features = st.container()
-model_vis = st.container()
+header = st.beta_container()
+dataset = st.beta_container()
+features = st.beta_container()
+model_vis = st.beta_container()
 
 with header:
     st.title("Welcome to my capstone project!")
