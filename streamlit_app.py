@@ -1,9 +1,9 @@
 import streamlit as st
 import numpy as np
 import pandas as pd
-import joblib
-from tensorflow.keras.models import load_model
-from tensorflow.keras.preprocessing.sequence import pad_sequences
+# import joblib
+# from tensorflow.keras.models import load_model
+# from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 header = st.container()
 dataset = st.container()
@@ -43,15 +43,15 @@ with model_vis:
 
     agency_as_int = agencies[agency]
                             
-    cnn_model = load_model('../models/model_4')
-    lgb_model = joblib.load('../models/lgbclf_4')
+    # cnn_model = load_model('../models/model_4')
+    # lgb_model = joblib.load('../models/lgbclf_4')
 
-    tokenizer = joblib.load('../models/tokenizer')
-    sequence = tokenizer.texts_to_sequences(np.array([input_foia_body]))
-    word_index = tokenizer.word_index
+    # tokenizer = joblib.load('../models/tokenizer')
+    # sequence = tokenizer.texts_to_sequences(np.array([input_foia_body]))
+    # word_index = tokenizer.word_index
 
-    # truncate or pad all the articles to the same length
-    sequence = [x[:250] for x in sequence]
-    input_data = pad_sequences(sequence, maxlen=250, padding='post', truncating='post')
+    # # truncate or pad all the articles to the same length
+    # sequence = [x[:250] for x in sequence]
+    # input_data = pad_sequences(sequence, maxlen=250, padding='post', truncating='post')
 
-    raw_cnn_pred = cnn_model.predict(input_data)
+    # raw_cnn_pred = cnn_model.predict(input_data)
