@@ -23,7 +23,7 @@ with dataset:
              caption='TF/IDF vectors of the dataset visualized with t-SNE')
 
 with model_vis:
-    sel_col, disp_col = st.columns(2)
+    sel_col, disp_col = st.beta_columns(2)
     agencies = {'FBI': 10,
                 'CIA': 6,
                 'NSA': 17,
