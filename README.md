@@ -148,9 +148,12 @@ There are many avenues I'd like to further pursue with this project:
 
 * Finding predictive words
     * Minimize target entropy over documents containing a specific word
-* Improving 
-    * Use PCA/SVD and NMF to try to identify impactful word combinations
-    * After dimensionality reduction, attempt another KNN classification
+* Data augmentation with NLP
+    * Increase dataset size by augmenting the train set:
+        - Translating to another language and back
+        - Synonym replacement
+        - Randomly swapping or deleting words
+    * Improving integration of agency metadata into the models
 * BERT pre-training
     * Further pre-training on within-task training data or in-domain data
     * Fine-tuning with multitask learning on related tasks
