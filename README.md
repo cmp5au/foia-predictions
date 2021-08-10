@@ -10,11 +10,9 @@ _________________________
     * [Using the API](#using-the-api)
     * [Preprocessing](#preprocessing)
 3. [Exploratory Data Analysis](#exploratory-data-analysis)
-4. [Hypothesis Testing](#hypothesis-testing)
-    * [Digging Deeper](#digging-deeper)
-        * [Two Rooks v. Queen](#two-rooks-v.-queen)
-        * [Bishop pair v. Knight pair](#bishop-pair-v.-knight-pair)
-        * [Knight & Bishop v. Rook & Pawn](#knight-&-bishop-v.-rook-&-pawn)
+4. [Model Fitting](#model-fitting)
+5. [Feature Importances](#feature-importances)
+6. [Conclusion and Next Steps](#conclusion-and-next-steps)
 5. [Sources and Further Reading](#sources-and-further-reading)
 
 <div align="center">
@@ -108,8 +106,12 @@ The worse the class imbalance, the worse accuracy is as a metric, so I looked fo
 | Baseline (mode)         | 0.2378      	  | 0.4093        |
 | Softmax                 | 0.2119      	  | 0.3533        |
 | KNN               	  | 0.4782    	      | 0.4819        |
-| Random Forest           | 0.5301            | 0.5531        |
-| <b>LightGBM (after tuning)</b> | <b>0.7757</b>            | <b>0.7799</b>        |
+| Random Forest           | 0.5101            | 0.5231        |
+| LightGBM (after tuning) | 0.5221            | 0.5391        |
+| Sequential Neural Network | 0.5118          | 0.5463        |
+| Basic LSTM              | 0.5141            | 0.5285        |
+| CNN with dynamic word embeddings | 0.6516   | 0.6647        |
+| <b>Fine-tuned BERT model</b> | <b>0.6908</b> | <b>0.6928</b> |
 
 <br>
 </center>
@@ -158,3 +160,5 @@ ___________________________________
 
 1. [Best Practices for Filing a FOIA Request](https://www.archives.gov/ogis/resources/ogis-toolbox/best-practices-for-foia-requesters/filing-a-foia-request)
 2. [MuckRock Tips and Tricks](https://www.muckrock.com/project/foia-101-tips-and-tricks-to-make-you-a-transparency-master-234/)
+3. [Convolutional Neural Networks for Sentence Classification](https://aclanthology.org/D14-1181.pdf)
+4. [How to Fine-Tune BERT for Text Classification](https://arxiv.org/pdf/1905.05583.pdf)
