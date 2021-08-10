@@ -19,7 +19,7 @@ for status in statuses:
     print(f"There are {len([foia for foia in foias if foia['status'] == status])} "
             f"documents with status '{status}'")
 
-df = pd.read_csv("agency ids.csv")
+df = pd.read_csv("../data/agency_ids.csv")
 df.set_index('id', inplace=True)
 df = df.append(pd.DataFrame(data=[['Agency not found']],
                        columns=df.columns,

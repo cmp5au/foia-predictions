@@ -1,10 +1,9 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, GridSearchCV, KFold
 from sklearn.metrics import f1_score
 import lightgbm as lgb
-from pymongo import MongoClient
 
 X = pd.read_csv('../data/model_features.csv')
 y = pd.read_csv('../data/target.csv').values

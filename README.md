@@ -85,15 +85,17 @@ I was also interested in the request result by agency:
 
 In the leftmost stacked bar we can see the class balance: 'Complete', 'No Relevant Documents', and 'Rejected' are relatively balanced, with 'Fix Required' and 'Partially Complete' classes being much smaller than the others. This informed my decision later on to use weighted F1 score as the model metric.
 
- The CIA is the least transparent, with the highest rejection rate and lowest full completion rate, followed by the NSA and FBI. The NSA has the second highest rejection rate, and the FBI has the highest rate of document redaction. The FCC and FTC show the highest completion rates and are the most transparent of these top 10 agencies. These patterns suggest that the agency will be an important feature of the classifier in the future. 
+ The CIA is the least transparent, with the highest rejection rate and lowest full completion rate, followed by the NSA and FBI. The NSA has the second highest rejection rate, and the FBI has the highest rate of document redaction. The FCC and FTC show the highest completion rates and are the most transparent of these top 10 agencies. These patterns suggest that the agency will be an important feature of the classifier in the future.
 
 _________________________
 
 ## Model Fitting
 
-I fit 4 classifiers: Softmax, k-Nearest Neighbors, Random Forest, and LightGBM. This last classifier is a type of Gradient Boosted classifier that has sophisticated algorithms for clever regularization and is able to handle categorical data without one-hot encoding.
+I initially fit 4 classifiers: Softmax, k-Nearest Neighbors, Random Forest, and LightGBM. This last classifier is a type of Gradient Boosted classifier that has sophisticated algorithms for clever regularization and is able to handle categorical data without one-hot encoding.
 
 Handling of categorical data was particularly important for me, because the agency feature is categorical but has thousands of categories -- too many to encode in a normal way. For the first 3 classifiers, I one-hot encoded the top 10 agencies, as well as a catch-all category for all other agencies.
+
+When fitting the deep learning networks, I chose to initially omit the agency information. It is categorical, and there are over 5000 categories, so one-hot encoding wasn't appealing to me. In addition, many deep learning methods for text classification don't use metadata, so integrating it into transfer learning would be difficult. I ended up training each deep learning model only on the corpus, then fitting a LightGBM model on the penultimate layer output along with the agency data.
 
 The worse the class imbalance, the worse accuracy is as a metric, so I looked for other metrics to use to evaluate multi-class classifiers. For the case of a private citizen checking their FOIA request before submitting it, falsely identifying a soon-to-be-successful request as 'Rejected' is punished in the same way as the opposite mistake: by loss of time. For this reason, I decided on weighted F1 score, which is calculated by determining a typical F1 score (2 * TP / (2 * TP + FP + FN)) for each of the 5 classes. They are combined by a weighted average, where a class' weight is equal to its fractional representation in the dataset. The model performance results are shown below:
 
@@ -104,6 +106,7 @@ The worse the class imbalance, the worse accuracy is as a metric, so I looked fo
 | Model               	  | Weighted F1 Score | Accuracy      |
 |--------------------	  |-----------    	  |----------     |
 | Baseline (mode)         | 0.2378      	  | 0.4093        |
+| Overfit BERT model      | 0.3498            | 0.3480
 | Softmax                 | 0.2119      	  | 0.3533        |
 | KNN               	  | 0.4782    	      | 0.4819        |
 | Random Forest           | 0.5101            | 0.5231        |
@@ -117,12 +120,12 @@ The worse the class imbalance, the worse accuracy is as a metric, so I looked fo
 </center>
 <br>
 
-Of these 4 models, LightGBM was by far the best-performing in cross-validation, so I used this model to run a cross-validated grid search and tune the hyperparameters. My final model had about 78% accuracy in predicting the FOIA request result; a significant improvement over baseline.
+Of these models, the fine-tuned BERTForSequenceClassifier was by far the best-performing. My final model had about 69% accuracy in predicting the FOIA request result; a significant improvement over the best-performing tree-based method.
 _________________________
 
 ### Feature Importances
 
-LightGBM's built-in encoding of categorical variables meant that I wasn't concerned with the typical drawback of using mean information gain -- that continuous variables would have inflated importance. Here is the graph of the 10 most important features to the model:
+LightGBM's built-in encoding of categorical variables meant that I wasn't concerned with the typical drawback of using mean information gain -- that continuous variables would have inflated importance. Here is the graph of the 10 most important features of the best tree-based model:
 
 <br>
 <div align="center">
@@ -133,22 +136,24 @@ LightGBM's built-in encoding of categorical variables meant that I wasn't concer
 
 As expected, the agency of request is the most important feature. After that, the TF/IDF values of frequently-occurring and formal words appear. This suggests to me that people who use a template or who have a lawyer draft their FOIA request have very different results than people who do not. This seems to be the number 1 predictor of success of the body of a FOIA request, though due to the hidden workings of the LightGBM model I can't say this with certainty.
 
+<br>
+
+The better-performing deep learning models are black boxes, and we can't look inside as easily to determing what's important. However, by noticing the jump from 61% cross-validation accuracy prior to integrating agency information up to 69% accuracy after training on agency, we can surmise that the agency is an important source of information to the deep learning models as well.
+
 ___________________________________
 
 ## Conclusion and Next Steps
 
 There are many avenues I'd like to further pursue with this project:
 
-* Exploring NLP preprocessing: n-grams, lemmatization, part-of-speech tags
-* One-vs-rest classifier for ‘rejected’ label; plot ROC and precision/recall curves
 * Finding predictive words
     * Minimize target entropy over documents containing a specific word
-    * Try these TF/IDF features as a dimensionality reduction technique
-* Dimensionality reduction & topic modeling
+* Improving 
     * Use PCA/SVD and NMF to try to identify impactful word combinations
     * After dimensionality reduction, attempt another KNN classification
-* Deep Learning
-    * Using BERT (contextual) / GloVe (no context) embeddings under a single-layer CNN
+* BERT pre-training
+    * Further pre-training on within-task training data or in-domain data
+    * Fine-tuning with multitask learning on related tasks
 
 <br>
 
