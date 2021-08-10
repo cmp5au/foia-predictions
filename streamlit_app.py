@@ -19,7 +19,7 @@ with dataset:
     st.text("19002 FOIA requests with body, agency, and status label.")
     st.text("This dataset was collected using the MuckRock API.")
 
-    st.image("../images/tSNE/3D/tfidf_tsne_3d.png",
+    st.image("images/tSNE/3D/tfidf_tsne_3d.png",
              caption='TF/IDF vectors of the dataset visualized with t-SNE')
 
 with model_vis:
