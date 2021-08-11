@@ -24,7 +24,7 @@ def make_tsne_graph(ax, model, preds):
     ys = scatter[:, 1]
 
     ax.scatter(xs[:-1], ys[:-1], c=full_colors[:-1], s=20, alpha=0.7)
-    ax.scatter(xs[-1:], ys[-1:], c='b', s=80, marker='*')
+    ax.scatter(xs[-1:], ys[-1:], c='yellow', s=150, marker='*')
 
     return ax
 
