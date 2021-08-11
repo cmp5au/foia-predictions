@@ -47,8 +47,12 @@ with model_vis:
     lgb_model = joblib.load('models/my_lgbm_model.jl')
 
     X = np.array([[input_foia_body, agency_as_int]])
-    preds = lgb_model.predict(X)
+    preds = [str(lgb_model.predict(x) * 100) + '%' for x in X]
+    preds_df = pd.DataFrame(data=preds,
+                            index=['Your Request #{i}:' for i in range(len(preds))],
+                            columns=['Completed', 'Redacted', 'Rejected'])
 
+    st.header("Probability of your FOIA Request")
     st.write(preds)
     # sequence = tokenizer.texts_to_sequences(np.array([input_foia_body]))
     # word_index = tokenizer.word_index
