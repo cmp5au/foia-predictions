@@ -27,7 +27,8 @@ def make_tsne_graph(ax, model, preds):
     ax.scatter(xs[-1:], ys[-1:], c='yellow', s=150, marker='*', label='Your request')
     ax.set_title('t-SNE visualization of LightGBM model output')
     
-    ax.legend(*scatter.legend_elements(num=3))
+    leg = ax.legend(*scatter.legend_elements(num=3))
+    ax.add_artist(leg)
 
     return ax
 
