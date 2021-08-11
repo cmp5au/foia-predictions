@@ -1,7 +1,7 @@
 import streamlit as st
 import numpy as np
 import pandas as pd
-# import joblib
+import joblib
 # from tensorflow.keras.models import load_model
 # from tensorflow.keras.preprocessing.sequence import pad_sequences
 
@@ -42,11 +42,13 @@ with model_vis:
                                options=agencies.keys())
 
     agency_as_int = agencies[agency]
-                            
-    # cnn_model = load_model('../models/model_4')
-    # lgb_model = joblib.load('../models/lgbclf_4')
+                    
+    lgb_model = joblib.load('../models/my_lgb_model.jl')
 
-    # tokenizer = joblib.load('../models/tokenizer')
+    X = np.array([[input_foia_body, agency_as_int]])
+    preds = lgb_model.predict(X)
+
+    st.write(preds)
     # sequence = tokenizer.texts_to_sequences(np.array([input_foia_body]))
     # word_index = tokenizer.word_index
 
