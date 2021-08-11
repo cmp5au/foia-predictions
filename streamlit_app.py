@@ -35,13 +35,13 @@ def make_tsne_graph(ax, model, preds):
     return ax
 
 with header:
-    st.title("Predicting FOIA request success")
-    st.text("Predicting success or failure of a Freedom of Information Act (FOIA) request.")
+    st.title("Predicting FOIA Request Success")
+    st.text("Multiclass classification using deep learning models and NLP techniques")
 
 with dataset:
     st.header("MuckRock FOIA dataset")
-    st.text("19002 FOIA requests with body, agency, and status label.")
-    st.text("This dataset was collected using the MuckRock API.")
+    st.text("Consists of 19002 FOIA requests with body, agency, and status label")
+    st.text("This dataset was collected using the MuckRock API")
 
     st.image("images/tSNE/2D/tfidf_tsne_2d.png",
              caption='TF/IDF vectors of the dataset visualized with t-SNE')
@@ -70,16 +70,25 @@ with model_vis:
                     
     lgb_model = joblib.load('models/my_lgbm_model.jl')
 
+    labels = ['Rejected', 'No Relevant Docs', 'Completed']
+
     X = np.array([[input_foia_body, agency_as_int]])
     preds = lgb_model.predict(X)
     preds_df = pd.DataFrame(data=preds,
                             index=['Your Request:' for i in range(len(preds))],
-                            columns=['Rejected', 'No Relevant Docs', 'Completed'])
+                            columns=labels)
 
-    st.header("Probability of your FOIA Request")
+    st.header("Your FOIA Request")
+    pred_label = labels[preds.argmax()]
+
+    if pred_label == 'No Relevant Docs':
+        st.text("This model predicts your request will most likely return no relevant documents.")
+    else:
+        st.text(f"This model predicts your request will most likely be {labels[preds.argmax()].lower()}.")
+
     st.write(preds_df)
 
-    st.header("Visualization of model predictions")
+    st.header("Visualization of Model Predictions")
 
     fig, ax = plt.subplots()
     
