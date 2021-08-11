@@ -2,6 +2,7 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 import joblib
+from src.lgb_modeling import LGBM_NLP_Classifier
 # from tensorflow.keras.models import load_model
 # from tensorflow.keras.preprocessing.sequence import pad_sequences
 
