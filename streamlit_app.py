@@ -43,7 +43,7 @@ with model_vis:
 
     agency_as_int = agencies[agency]
                     
-    lgb_model = joblib.load('../models/my_lgb_model.jl')
+    lgb_model = joblib.load('models/my_lgb_model.jl')
 
     X = np.array([[input_foia_body, agency_as_int]])
     preds = lgb_model.predict(X)
