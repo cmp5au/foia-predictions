@@ -1,18 +1,33 @@
 import streamlit as st
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 import joblib
 from src.lgb_modeling import LGBM_NLP_Classifier
-# from tensorflow.keras.models import load_model
-# from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 header = st.beta_container()
 dataset = st.beta_container()
 features = st.beta_container()
 model_vis = st.beta_container()
 
+@st.cache
+def make_tsne_graph(ax, model, preds):
+    full_preds = np.concatenate((model.preds, preds))
+    full_colors = np.concatenate((model.colors, np.array(['y'])))
+    scatter = model.tsne.fit_transform(full_preds)
+
+    idxs = np.random.choice(range(len(scatter) - 1), size=1000, replace=False)
+
+    xs = scatter[:, 0]
+    ys = scatter[:, 1]
+
+    ax.scatter(xs[idxs], ys[idxs], c=full_colors[idxs])
+    ax.scatter(xs[-1:], ys[-1:], c='y', s=100)
+
+    return ax
+
 with header:
-    st.title("Welcome to my capstone project!")
+    st.title("Predicting FOIA request success")
     st.text("Predicting success or failure of a Freedom of Information Act (FOIA) request.")
 
 with dataset:
@@ -54,11 +69,11 @@ with model_vis:
 
     st.header("Probability of your FOIA Request")
     st.write(preds_df)
-    # sequence = tokenizer.texts_to_sequences(np.array([input_foia_body]))
-    # word_index = tokenizer.word_index
 
-    # # truncate or pad all the articles to the same length
-    # sequence = [x[:250] for x in sequence]
-    # input_data = pad_sequences(sequence, maxlen=250, padding='post', truncating='post')
+    st.header("Visualization of model's prediction")
 
-    # raw_cnn_pred = cnn_model.predict(input_data)
+    fig, ax = plt.subplots()
+    
+    make_tsne_graph(ax, lgb_model, preds)
+    
+    st.write(fig)

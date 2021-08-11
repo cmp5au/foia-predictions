@@ -5,6 +5,7 @@ import joblib
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import f1_score
+from sklearn.decomposition import TruncatedSVD
 from sklearn.manifold import TSNE
 import lightgbm as lgb
 import re
@@ -13,6 +14,9 @@ class LGBM_NLP_Classifier:
       def __init__(self):
             self.tfidf = None
             self.model = None
+            self.tsne = None
+            self.preds = None
+            self.colors = None
             self.fitted = False
 
       def fit(self, X, y):
@@ -30,6 +34,7 @@ class LGBM_NLP_Classifier:
                                    num_boost_round=2000,
                                    learning_rate=0.01,
                                    metric='multi_logloss')
+
             self.model.fit(X_transformed, y, categorical_feature=[X.shape[1] - 1])
 
             self.fitted = True
@@ -39,6 +44,14 @@ class LGBM_NLP_Classifier:
             X_transformed = np.concatenate((self.tfidf.transform(X[:, 0]).toarray(),
                                             X[:, 1].reshape(-1, 1)), axis=1)
             return self.model.predict_proba(X_transformed)
+
+      def fit_tsne(self, X, y):
+            self.preds = self.predict(X)
+            self.tsne = TSNE(n_components=2)
+            labels = list(set(y))
+            self.colors = np.array(['g' if y == labels[0] else 'k' if y == labels[1] else 'r'
+                        for y in y])
+            return self
 
 if __name__ == '__main__':
       df = pd.read_csv('../data/body_multiclass_target.csv')
@@ -64,6 +77,7 @@ if __name__ == '__main__':
 
       my_lgbm_model = LGBM_NLP_Classifier()
       my_lgbm_model.fit(X, y)
+      my_lgbm_model.fit_tsne(X, y)
       joblib.dump(my_lgbm_model, '../models/my_lgbm_model.jl')
 
       loaded_model = joblib.load('../models/my_lgbm_model.jl')
