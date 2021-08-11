@@ -59,8 +59,9 @@ with model_vis:
                 'State Dept': 14,
                 'Other': 981}
 
-    input_foia_body = sel_col.text_input('Enter your own FOIA request to get an estimated probability of success:',
-                        '(Copy / paste your FOIA request here)')
+    # input_foia_body = sel_col.text_area('Enter your own FOIA request to get an estimated probability of success:',
+    #                     '(Copy / paste your FOIA request here)')
+    input_foia_body = st.text_area('Enter your own FOIA request to get an estimated probability of success:')
 
     agency = sel_col.selectbox('Which agency are you filing with?',
                                options=agencies.keys())
