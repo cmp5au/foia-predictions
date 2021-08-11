@@ -10,7 +10,6 @@ dataset = st.beta_container()
 features = st.beta_container()
 model_vis = st.beta_container()
 
-@st.cache
 def make_tsne_graph(ax, model, preds):
 
     idxs = np.random.choice(range(len(preds)), size=1000, replace=False)
