@@ -17,14 +17,14 @@ def make_tsne_graph(ax, model, preds):
     idxs = np.random.choice(range(len(model.preds)), size=1000, replace=False)
 
     full_preds = np.concatenate((model.preds[idxs], preds))
-    full_colors = np.concatenate((model.colors[idxs], np.array(['gold'])))
+    full_colors = np.concatenate((model.colors[idxs], np.array(['b'])))
 
     scatter = model.tsne.fit_transform(full_preds)
     xs = scatter[:, 0]
     ys = scatter[:, 1]
 
     ax.scatter(xs[:-1], ys[:-1], c=full_colors[:-1], s=20, alpha=0.7)
-    ax.scatter(xs[-1:], ys[-1:], c='gold', s=80, marker='*')
+    ax.scatter(xs[-1:], ys[-1:], c='b', s=80, marker='*')
 
     return ax
 
