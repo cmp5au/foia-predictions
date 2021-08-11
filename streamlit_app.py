@@ -23,10 +23,11 @@ def make_tsne_graph(ax, model, preds):
     xs = scatter[:, 0]
     ys = scatter[:, 1]
 
-    ax.scatter(xs[:-1], ys[:-1], c=full_colors[:-1], s=20, alpha=0.7)
-    ax.scatter(xs[-1:], ys[-1:], c='yellow', s=150, marker='*')
+    scatter = ax.scatter(xs[:-1], ys[:-1], c=full_colors[:-1], s=20, alpha=0.7)
+    ax.scatter(xs[-1:], ys[-1:], c='yellow', s=150, marker='*', label='Your request')
     ax.set_title('t-SNE visualization of LightGBM model output')
-    ax.legend()
+    
+    ax.legend(*scatter.legend_elements(num=3))
 
     return ax
 
@@ -69,12 +70,12 @@ with model_vis:
     preds = lgb_model.predict(X)
     preds_df = pd.DataFrame(data=preds,
                             index=['Your Request:' for i in range(len(preds))],
-                            columns=['Rejected', 'Redacted', 'Completed'])
+                            columns=['Rejected', 'No Relevant Docs', 'Completed'])
 
     st.header("Probability of your FOIA Request")
     st.write(preds_df)
 
-    st.header("Visualization of model's prediction")
+    st.header("Visualization of model predictions")
 
     fig, ax = plt.subplots()
     
