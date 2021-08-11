@@ -49,11 +49,11 @@ with model_vis:
     X = np.array([[input_foia_body, agency_as_int]])
     preds = lgb_model.predict(X)
     preds_df = pd.DataFrame(data=preds,
-                            index=['Your Request #{i}:' for i in range(len(preds))],
+                            index=['Your Request:' for i in range(len(preds))],
                             columns=['Completed', 'Redacted', 'Rejected'])
 
     st.header("Probability of your FOIA Request")
-    st.write(preds)
+    st.write(preds_df)
     # sequence = tokenizer.texts_to_sequences(np.array([input_foia_body]))
     # word_index = tokenizer.word_index
 
