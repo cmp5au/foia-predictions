@@ -12,7 +12,7 @@ model_vis = st.beta_container()
 
 def make_tsne_graph(ax, model, preds):
 
-    idxs = np.random.choice(range(len(preds)), size=1000, replace=False)
+    idxs = np.random.choice(range(len(model.preds)), size=1000, replace=False)
 
     full_preds = np.concatenate((model.preds[idxs], preds))
     full_colors = np.concatenate((model.colors[idxs], np.array(['y'])))
