@@ -21,7 +21,7 @@ def make_tsne_graph(ax, model, preds):
     xs = scatter[:, 0]
     ys = scatter[:, 1]
 
-    ax.scatter(xs[:-1], ys[:-1], c=full_colors[:-1])
+    ax.scatter(xs[:-1], ys[:-1], c=full_colors[:-1], s=50, alpha=0.7)
     ax.scatter(xs[-1:], ys[-1:], c='gold', s=70, marker='*')
 
     return ax
@@ -65,7 +65,7 @@ with model_vis:
     preds = lgb_model.predict(X)
     preds_df = pd.DataFrame(data=preds,
                             index=['Your Request:' for i in range(len(preds))],
-                            columns=['Completed', 'Redacted', 'Rejected'])
+                            columns=['Rejected', 'Redacted', 'Completed'])
 
     st.header("Probability of your FOIA Request")
     st.write(preds_df)
