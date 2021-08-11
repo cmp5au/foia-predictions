@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 import joblib
 from src.lgb_modeling import LGBM_NLP_Classifier
 
+plt.style.use('ggplot')
+
 header = st.beta_container()
 dataset = st.beta_container()
 features = st.beta_container()
@@ -21,8 +23,8 @@ def make_tsne_graph(ax, model, preds):
     xs = scatter[:, 0]
     ys = scatter[:, 1]
 
-    ax.scatter(xs[:-1], ys[:-1], c=full_colors[:-1], s=50, alpha=0.7)
-    ax.scatter(xs[-1:], ys[-1:], c='gold', s=70, marker='*')
+    ax.scatter(xs[:-1], ys[:-1], c=full_colors[:-1], s=20, alpha=0.7)
+    ax.scatter(xs[-1:], ys[-1:], c='gold', s=80, marker='*')
 
     return ax
 
