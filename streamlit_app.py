@@ -82,4 +82,4 @@ with model_vis:
     
     make_tsne_graph(ax, lgb_model, preds)
     
-    st.write(ax)
+    st.write(fig)
